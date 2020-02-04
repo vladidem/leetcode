@@ -118,7 +118,7 @@ const findDistances = (adjacencyList, beginWord) => {
 
 const backtrackPaths = (adjacencyList, distances, endWord) => {
   // return empty array, if end word is inaccessable
-  if (!distances[endWord]) {
+  if (!distances[endWord] || distances[endWord] === Number.MAX_VALUE) {
     return [];
   }
 
