@@ -151,7 +151,7 @@ const backtrackPaths = (adjacencyList, distances, endWord) => {
  * @return {string[][]}
  */
 const findLadders = function(beginWord, endWord, wordList) {
-  const adjustedWords = [...wordList, beginWord];
+  const adjustedWords = [...new Set([...wordList, beginWord])];
   const adjacencyList = createGraph(adjustedWords);
 
   const distances = findDistances(adjacencyList, beginWord);
@@ -161,8 +161,8 @@ const findLadders = function(beginWord, endWord, wordList) {
   return paths;
 };
 
-const words = ['hot', 'dot', 'dog', 'lot', 'log'];
+const words = ['a', 'b', 'c'];
 
-const res = findLadders('hit', 'cog', words);
+const res = findLadders('a', 'b', words);
 
 const test = 1;
