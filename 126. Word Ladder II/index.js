@@ -103,7 +103,7 @@ const withPerformance = require('../helpers/withPerformance');
 const isNeighbours = (wordA, wordB, maxDistance = 1) => {
   let distance = 0;
 
-  for (let i in wordA) {
+  for (let i = 0; i < wordA.length; i++) {
     if (wordA[i] !== wordB[i]) {
       distance += 1;
 
