@@ -98,7 +98,6 @@ class PriorityQueue {
 }
 
 ////////
-const withPerformance = require('../helpers/withPerformance');
 
 const isNeighbours = (wordA, wordB, maxDistance = 1) => {
   let distance = 0;
@@ -233,7 +232,7 @@ const findLadders = function(beginWord, endWord, wordList) {
     adjustedWords.push(beginWord);
   }
 
-  const adjacencyList = withPerformance(() => createGraph(adjustedWords));
+  const adjacencyList = createGraph(adjustedWords);
   const distances = findDistances(adjacencyList, beginWord);
 
   const paths = backtrackPaths(adjacencyList, distances, endWord);
