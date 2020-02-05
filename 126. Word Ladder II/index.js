@@ -16,6 +16,15 @@ Object.defineProperty(Array.prototype, 'flat', {
   },
 });
 
+Object.defineProperty(Object, 'fromEntries', {
+  value: (iterable) => {
+    return [...iterable].reduce((obj, [key, val]) => {
+      obj[key] = val;
+      return obj;
+    }, {});
+  },
+});
+
 // Priority Queue taken from https://stackoverflow.com/questions/42919469/efficient-way-to-implement-priority-queue-in-javascript
 const top = 0;
 const parent = (i) => ((i + 1) >>> 1) - 1;
@@ -89,6 +98,7 @@ class PriorityQueue {
 }
 
 ////////
+const withPerformance = require('../helpers/withPerformance');
 
 const isNeighbours = (wordA, wordB, maxDistance = 1) => {
   let distance = 0;
@@ -106,18 +116,20 @@ const isNeighbours = (wordA, wordB, maxDistance = 1) => {
   return true;
 };
 
-const addWord = (tree, word) => {
-  tree[word] = [];
+const addWord = (graphEntries, word) => {
+  const wordNeighbours = [];
 
-  for (let treeWord in tree) {
-    if (word === treeWord) {
-      continue;
-    }
+  for (let i = 0; i < graphEntries.length; i++) {
+    // tree entry looks like ['word', ['neighbour1', 'neighbour2']]
+    const treeWord = graphEntries[i][0];
+
     if (isNeighbours(treeWord, word)) {
-      tree[treeWord].push(word);
-      tree[word].push(treeWord);
+      graphEntries[i][1].push(word);
+      wordNeighbours.push(treeWord);
     }
   }
+
+  graphEntries.push([word, wordNeighbours]);
 };
 
 /**
@@ -131,13 +143,13 @@ const addWord = (tree, word) => {
  * @returns {Object<string, string[]>}
  */
 const createGraph = (wordList) => {
-  const tree = {};
+  const graphEntries = [];
 
   for (let word of wordList) {
-    addWord(tree, word);
+    addWord(graphEntries, word);
   }
 
-  return tree;
+  return Object.fromEntries(graphEntries);
 };
 
 /**
@@ -216,9 +228,12 @@ const backtrackPaths = (adjacencyList, distances, endWord) => {
  * @return {string[][]}
  */
 const findLadders = function(beginWord, endWord, wordList) {
-  const adjustedWords = [...new Set([...wordList, beginWord])];
-  const adjacencyList = createGraph(adjustedWords);
+  const adjustedWords = wordList;
+  if (!adjustedWords.includes(beginWord)) {
+    adjustedWords.push(beginWord);
+  }
 
+  const adjacencyList = withPerformance(() => createGraph(adjustedWords));
   const distances = findDistances(adjacencyList, beginWord);
 
   const paths = backtrackPaths(adjacencyList, distances, endWord);
