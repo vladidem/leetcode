@@ -173,32 +173,22 @@ class MyLinkedList {
 
     this.length -= 1;
   }
+
+  /**
+   * @returns {number[]}
+   */
+  toArray() {
+    const res = [];
+    let currentNode = this.head;
+
+    while (currentNode) {
+      res.push(currentNode.val);
+
+      currentNode = currentNode.next;
+    }
+
+    return res;
+  }
 }
 
-/*
-["MyLinkedList",
-"addAtHead",
-"deleteAtIndex",
-"addAtHead",
-"addAtHead",
-"addAtHead",
-"addAtHead",
-"addAtHead",
-"addAtTail",
-"get",
-"deleteAtIndex",
-"deleteAtIndex"]
- [[],[2],[1],[2],[7],[3],[2],[5],[5],[5],[6],[4]]
-*/
-const linkedList = new MyLinkedList(); // Initialize empty LinkedList
-linkedList.addAtHead(2);
-linkedList.deleteAtIndex(1);
-linkedList.addAtHead(2);
-linkedList.addAtHead(7);
-linkedList.addAtHead(3);
-linkedList.addAtHead(2);
-linkedList.addAtHead(5);
-linkedList.addAtTail(5);
-linkedList.get(5);
-linkedList.deleteAtIndex(6);
-linkedList.deleteAtIndex(4);
+module.exports = { MyLinkedList };
