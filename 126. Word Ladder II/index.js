@@ -240,8 +240,4 @@ const findLadders = function(beginWord, endWord, wordList) {
   return paths;
 };
 
-const words = require('./words');
-
-const res = findLadders('sand', 'acne', words);
-
-const test = 1;
+module.exports = { findLadders };
