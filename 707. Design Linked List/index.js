@@ -102,6 +102,7 @@ class MyLinkedList {
     }
 
     this.head = this.head.next;
+    this.head.prev = null;
 
     this.length -= 1;
   }
@@ -115,6 +116,7 @@ class MyLinkedList {
     }
 
     this.tail = this.tail.prev;
+    this.tail.next = null;
 
     this.length -= 1;
   }
