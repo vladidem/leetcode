@@ -32,8 +32,4 @@ var firstMissingPositive = function(nums) {
   return nums.length + 1;
 };
 
-const input = [3, 4, -1, 1];
-
-const res = firstMissingPositive(input);
-
-const fin = true;
+module.exports = { firstMissingPositive };
