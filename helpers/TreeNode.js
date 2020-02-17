@@ -27,6 +27,52 @@ class TreeNode {
 
     return root;
   }
+
+  static removeTrailingNulls(array) {
+    const res = [...array];
+
+    while (res[res.length - 1] === null) {
+      res.pop();
+    }
+
+    return res;
+  }
+
+  /**
+   * @return {number[]}
+   */
+  static treeToArray(root) {
+    let nextLevel = [root];
+    let nextLevelValues = [root.val];
+    let level;
+    const res = [];
+
+    while (nextLevel.length) {
+      res.push(...nextLevelValues);
+
+      level = nextLevel;
+      nextLevelValues = [];
+      nextLevel = [];
+
+      for (let node of level) {
+        if (node.left) {
+          nextLevel.push(node.left);
+          nextLevelValues.push(node.left.val);
+        } else {
+          nextLevelValues.push(null);
+        }
+
+        if (node.right) {
+          nextLevel.push(node.right);
+          nextLevelValues.push(node.right.val);
+        } else {
+          nextLevelValues.push(null);
+        }
+      }
+    }
+
+    return TreeNode.removeTrailingNulls(res);
+  }
 }
 
 module.exports = TreeNode;
