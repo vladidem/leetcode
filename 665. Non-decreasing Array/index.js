@@ -45,6 +45,4 @@ var checkPossibility = function(nums) {
   return true;
 };
 
-const test = [1, 2, 4, 5, 3];
-
-const res = checkPossibility(test);
+module.exports = { checkPossibility };
