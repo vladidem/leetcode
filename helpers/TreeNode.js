@@ -19,6 +19,11 @@ class TreeNode {
         queue.push(currentNode.left);
       }
 
+      // break if trailing nulls are omitted
+      if (i + 1 === array.length) {
+        break;
+      }
+
       if (array[i + 1] !== null) {
         currentNode.right = new TreeNode(array[i + 1]);
         queue.push(currentNode.right);
