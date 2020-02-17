@@ -243,8 +243,4 @@ const ladderLength = function(beginWord, endWord, wordList) {
   return isAccessable ? distances[endWord] + 1 : 0;
 };
 
-const wordList = ['hot', 'dot', 'dog', 'lot', 'log'];
-
-const res = ladderLength('hit', 'cog', wordList);
-
-const test = 1;
+module.exports = { ladderLength };
