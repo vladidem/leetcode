@@ -67,7 +67,7 @@ const widthOfBinaryTree = function(root) {
     }
   }
 
-  return Math.max(...widths);
+  return Math.max(...widths.filter((n) => !isNaN(n)));
 };
 
 module.exports = { widthOfBinaryTree, TreeNode };
