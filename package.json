@@ -10,5 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "jest": "^25.1.0"
+  },
+  "dependencies": {
+    "bignumber.js": "^9.0.0"
   }
 }

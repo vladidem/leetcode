@@ -1,4 +1,5 @@
 const TreeNode = require('../helpers/TreeNode');
+const BigNumber = require('bignumber.js');
 
 Array.prototype.findLast = function findLast(predicate) {
   for (let i = this.length - 1; i >= 0; --i) {
@@ -17,7 +18,10 @@ const levelWidth = (level, nodeIndexes) => {
     return 0;
   }
 
-  return nodeIndexes.get(rightNode) - nodeIndexes.get(leftNode) + 1;
+  return nodeIndexes
+    .get(rightNode)
+    .minus(nodeIndexes.get(leftNode))
+    .plus(1);
 };
 
 /**
@@ -33,7 +37,7 @@ const levelWidth = (level, nodeIndexes) => {
  */
 const widthOfBinaryTree = function(root) {
   const nodeIndexes = new Map();
-  nodeIndexes.set(root, 0);
+  nodeIndexes.set(root, new BigNumber(0));
 
   let nextLevel = [root];
   let level;
@@ -53,13 +57,13 @@ const widthOfBinaryTree = function(root) {
       const nodeIndex = nodeIndexes.get(node);
 
       if (node.left) {
-        const leftChildIndex = nodeIndex * 2;
+        const leftChildIndex = nodeIndex.times(2);
 
         nextLevel.push(node.left);
         nodeIndexes.set(node.left, leftChildIndex);
       }
       if (node.right) {
-        const rightChildIndex = nodeIndex * 2 + 1;
+        const rightChildIndex = nodeIndex.times(2).plus(1);
 
         nextLevel.push(node.right);
         nodeIndexes.set(node.right, rightChildIndex);
@@ -67,7 +71,7 @@ const widthOfBinaryTree = function(root) {
     }
   }
 
-  return Math.max(...widths.filter((n) => !isNaN(n)));
+  return BigNumber.max(...widths);
 };
 
-module.exports = { widthOfBinaryTree, TreeNode };
+module.exports = { widthOfBinaryTree, TreeNode, BigNumber };
