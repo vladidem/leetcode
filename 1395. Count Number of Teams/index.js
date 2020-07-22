@@ -75,14 +75,6 @@ class TeamProducer {
     return fullTeams;
   }
 
-  setUsed(soldier) {
-    return this.usedSoldiers.add(soldier);
-  }
-
-  isSoldierUsed(soldier) {
-    return this.usedSoldiers.has(soldier);
-  }
-
   getAdjacentSoldiers(soldier) {
     return this.adjacency.get(soldier) || [];
   }
