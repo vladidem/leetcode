@@ -112,8 +112,6 @@ const backtrackPaths = (adjacencyList, distances, endWord) => {
     );
   };
 
-  // let currentWord = endWord;
-
   for (let i = 0; i < distances[endWord]; i++) {
     paths = paths
       // for each possible next step append path with it
