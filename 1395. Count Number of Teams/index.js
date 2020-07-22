@@ -1,28 +1,10 @@
 require('../helpers/defineArrayFlat')();
-require('../helpers/defineArrayLast')();
 
-Array.prototype.isEqual = function (other) {
-  if (this === other) return true;
-  if (this == null || other == null) return false;
-  if (this.length !== other.length) return false;
-
-  for (let i = 0; i < this.length; i++) {
-    if (this[i] !== other[i]) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
-const subArrays = (array, size = 1) => {
-  const arrayChunks = [];
-  for (let i = 0; i <= array.length - size; i++) {
-    const arrayChunk = array.slice(i, i + size);
-    arrayChunks.push(arrayChunk);
-  }
-  return arrayChunks;
-};
+if (!Array.prototype.last) {
+  Array.prototype.last = function () {
+    return this[this.length - 1];
+  };
+}
 
 class Soldier {
   constructor(index, rating) {
@@ -40,20 +22,8 @@ class TeamProducer {
   produce(soldiers) {
     this.soldiers = soldiers;
     this.fillAdjacency();
-    let teams = this.createTeams();
 
-    teams = teams
-      .filter((team) => team.length >= this.teamSize)
-      .map((team) => subArrays(team, this.teamSize))
-      .flat(1);
-
-    teams = teams.filter((team, index) => {
-      const otherIndex = teams.findIndex((other) => team.isEqual(other));
-
-      return index === otherIndex;
-    });
-
-    return teams;
+    return this.createTeams();
   }
 
   fillAdjacency() {
@@ -83,36 +53,38 @@ class TeamProducer {
   }
 
   createTeams() {
-    const usedSoldiers = new Set();
     let teams = [];
     let fullTeams = [];
 
     for (const teamStarter of this.soldiers) {
-      if (usedSoldiers.has(teamStarter)) {
-        continue;
-      }
       teams = [[teamStarter]];
 
-      while (teams.length > 0) {
+      for (let i = 1; i < this.teamSize; i++) {
         teams = teams
           .map((team) => {
             const lastSoldier = team.last();
-            const nextSoldiers = this.adjacency.get(lastSoldier) || [];
+            const nextSoldiers = this.getAdjacentSoldiers(lastSoldier);
 
-            const nextTeams =
-              nextSoldiers.map((nextSoldier) => [...team, nextSoldier]) || [];
-            nextSoldiers.forEach((soldier) => usedSoldiers.add(soldier));
-
-            if (nextTeams.length === 0) {
-              fullTeams.push(team);
-            }
-
-            return nextTeams;
+            return nextSoldiers.map((soldier) => [...team, soldier]);
           })
           .flat(1);
       }
+
+      fullTeams.push(...teams);
     }
     return fullTeams;
+  }
+
+  setUsed(soldier) {
+    return this.usedSoldiers.add(soldier);
+  }
+
+  isSoldierUsed(soldier) {
+    return this.usedSoldiers.has(soldier);
+  }
+
+  getAdjacentSoldiers(soldier) {
+    return this.adjacency.get(soldier) || [];
   }
 }
 
@@ -138,4 +110,4 @@ var numTeams = function (rating) {
   return teams.length;
 };
 
-module.exports = { numTeams, subArrays };
+module.exports = { numTeams };
