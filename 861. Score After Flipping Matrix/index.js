@@ -28,19 +28,19 @@ class Matrix {
     return [...Array(this.height)].map((_, index) => index);
   }
 
-  toggleRow(row) {
+  flipRow(row) {
     for (let i = 0; i < this.numbers[row].length; i++) {
-      this.numbers[row][i] = this.toggle(this.numbers[row][i]);
+      this.numbers[row][i] = this.flip(this.numbers[row][i]);
     }
   }
 
-  toggleColumn(column) {
+  flipColumn(column) {
     for (let i = 0; i < this.numbers.length; i++) {
-      this.numbers[i][column] = this.toggle(this.numbers[i][column]);
+      this.numbers[i][column] = this.flip(this.numbers[i][column]);
     }
   }
 
-  toggle(number) {
+  flip(number) {
     if (number === 0) {
       return 1;
     }
@@ -56,7 +56,7 @@ class Matrix {
     return count;
   }
 
-  shouldToggleRow(row) {
+  shouldFlipRow(row) {
     return this.rowToNumber(row) < this.invertedRowToNumber(row);
   }
 
@@ -69,7 +69,7 @@ class Matrix {
     return count;
   }
 
-  shouldToggleColumn(column) {
+  shouldFlipColumn(column) {
     return this.countColumn(column) < Math.ceil(this.height / 2);
   }
 
@@ -105,14 +105,14 @@ var matrixScore = function (numbers) {
   do {
     changed = false;
     rows.forEach((it) => {
-      if (matrix.shouldToggleRow(it)) {
-        matrix.toggleRow(it);
+      if (matrix.shouldFlipRow(it)) {
+        matrix.flipRow(it);
         changed = true;
       }
     });
     columns.forEach((it) => {
-      if (matrix.shouldToggleColumn(it)) {
-        matrix.toggleColumn(it);
+      if (matrix.shouldFlipColumn(it)) {
+        matrix.flipColumn(it);
         changed = true;
       }
     });

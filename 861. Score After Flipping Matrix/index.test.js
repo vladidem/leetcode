@@ -1,7 +1,7 @@
 const {
   Matrix,
-  ColMatrixToggle,
-  RowMatrixToggle,
+  ColMatrixFlip,
+  RowMatrixFlip,
   matrixScore,
 } = require('./index');
 
@@ -51,7 +51,7 @@ describe('861. Score After Flipping Matrix', () => {
       [1, 1, 0, 0, 1],
     ];
     matrix = new Matrix(numbers);
-    matrix.toggleColumn(0);
+    matrix.flipColumn(0);
     expect(matrix.rowToNumber(0)).toEqual(23);
     expect(matrix.rowToNumber(1)).toEqual(4);
     expect(matrix.rowToNumber(2)).toEqual(9);
@@ -63,7 +63,7 @@ describe('861. Score After Flipping Matrix', () => {
     ];
 
     matrix = new Matrix(numbers);
-    matrix.toggleRow(0);
+    matrix.flipRow(0);
     expect(matrix.rowToNumber(0)).toEqual(24);
   });
 
