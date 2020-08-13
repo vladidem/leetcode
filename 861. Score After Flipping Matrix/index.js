@@ -1,137 +1,124 @@
-require('../helpers/defineArrayFlat')();
-
-// https://stackoverflow.com/questions/29759480/how-to-customize-object-equality-for-javascript-set/29783624#29783624
-class GeneralSet {
-  constructor() {
-    this.map = new Map();
-    this[Symbol.iterator] = this.values;
-  }
-
-  add(item) {
-    return this.map.set(item.toIdString(), item);
-  }
-
-  values() {
-    return this.map.values();
-  }
-
-  delete(item) {
-    return this.map.delete(item.toIdString());
-  }
-
-  has(item) {
-    return this.map.has(item.toIdString());
-  }
-}
-
-class RowMatrixToggle {
-  constructor(row) {
-    this.row = row;
-  }
-  apply(matrix) {
-    const numbers = [...matrix.numbers];
-    numbers[this.row] = ~numbers[this.row] & matrix.numberMask;
-
-    return new Matrix(numbers, matrix.numberMask, matrix.digits);
-  }
-}
-
-class ColMatrixToggle {
-  constructor(col) {
-    this.col = col;
-  }
-
-  apply(matrix) {
-    const mask = 1 << (matrix.digits - (this.col + 1));
-    const numbers = matrix.numbers.map((number) => number ^ mask);
-    return new Matrix(numbers, matrix.numberMask, matrix.digits);
-  }
-}
-
 class Matrix {
-  /**
-   * @param {number[]} numbers
-   */
-  constructor(numbers, numberMask, digits) {
+  constructor(numbers) {
     this.numbers = numbers;
-    this.numberMask = numberMask;
-    this.digits = digits;
+    this.height = numbers.length;
+    this.width = numbers[0].length;
+
+    this.numberMask = this.getNumberMask(this.width);
   }
 
-  equals(other) {
-    if (this.numberMask !== other.numberMask) {
-      return false;
+  getNumberMask(width) {
+    let res = 0;
+    for (let i = 0; i < width; i++) {
+      res = (res << 1) + 1;
     }
+
+    return res;
+  }
+
+  invertedRowToNumber(row) {
+    return ~this.rowToNumber(row) & this.numberMask;
+  }
+
+  columns() {
+    return [...Array(this.width)].map((_, index) => index);
+  }
+
+  rows() {
+    return [...Array(this.height)].map((_, index) => index);
+  }
+
+  toggleRow(row) {
+    for (let i = 0; i < this.numbers[row].length; i++) {
+      this.numbers[row][i] = this.toggle(this.numbers[row][i]);
+    }
+  }
+
+  toggleColumn(column) {
     for (let i = 0; i < this.numbers.length; i++) {
-      if (this.numbers[i] !== other.numbers[i]) {
-        return false;
-      }
+      this.numbers[i][column] = this.toggle(this.numbers[i][column]);
     }
-    return true;
   }
 
-  toIdString() {
-    return this.numbers.join();
+  toggle(number) {
+    if (number === 0) {
+      return 1;
+    }
+    return 0;
   }
 
-  possiblePermutations() {
-    const colPermutations = [...Array(this.digits)].map(
-      (_, i) => new ColMatrixToggle(i),
-    );
-    const rowPermutations = [...Array(this.numbers.length)].map(
-      (_, i) => new RowMatrixToggle(i),
-    );
+  countRow(row) {
+    let count = 0;
+    for (let i = 0; i < this.numbers[row].length; i++) {
+      count += this.numbers[row][i];
+    }
 
-    return [...colPermutations, ...rowPermutations];
+    return count;
+  }
+
+  shouldToggleRow(row) {
+    return this.rowToNumber(row) < this.invertedRowToNumber(row);
+  }
+
+  countColumn(column) {
+    let count = 0;
+    for (let i = 0; i < this.numbers.length; i++) {
+      count += this.numbers[i][column];
+    }
+
+    return count;
+  }
+
+  shouldToggleColumn(column) {
+    return this.countColumn(column) < Math.ceil(this.height / 2);
+  }
+
+  rowToNumber(row) {
+    let number = 0;
+    for (let i = 0; i < this.width; i++) {
+      number += this.numbers[row][i] * (1 << (this.width - i - 1));
+    }
+
+    return number;
   }
 
   sum() {
-    return this.numbers.reduce((prev, current) => prev + current, 0);
-  }
-
-  static calculateNumberMask(digits) {
-    let mask = 0;
-    for (let i = 0; i < digits; i++) {
-      mask = (mask << 1) + 1;
+    let sum = 0;
+    for (let i = 0; i < this.height; i++) {
+      sum += this.rowToNumber(i);
     }
-    return mask;
-  }
 
-  /**
-   * @param {number[][]} rows
-   */
-  static fromRows(rows) {
-    const digits = rows[0].length;
-    const numbers = rows.map((row) => Number.parseInt(row.join(''), 2));
-    const numberMask = this.calculateNumberMask(digits);
-
-    return new Matrix(numbers, numberMask, digits);
+    return sum;
   }
 }
 
 /**
- * @param {number[][]} rows
+ * @param {number[][]} numbers
  * @return {number}
  */
-var matrixScore = function (rows) {
-  const initialMatrix = Matrix.fromRows(rows);
-  const permutations = initialMatrix.possiblePermutations();
-  const set = new GeneralSet();
-  let currentMatrixes;
-  let nextMatrixes = [initialMatrix];
+var matrixScore = function (numbers) {
+  const matrix = new Matrix(numbers);
+  const columns = matrix.columns();
+  const rows = matrix.rows();
+  let changed;
 
-  while (nextMatrixes.length > 0) {
-    currentMatrixes = nextMatrixes;
-    nextMatrixes = [];
-    currentMatrixes.forEach((m) => set.add(m));
-    currentMatrixes
-      .map((m) => permutations.map((permutation) => permutation.apply(m)))
-      .forEach((matrixes) => {
-        nextMatrixes.push(...matrixes.filter((m) => !set.has(m)));
-      });
-  }
+  do {
+    changed = false;
+    rows.forEach((it) => {
+      if (matrix.shouldToggleRow(it)) {
+        matrix.toggleRow(it);
+        changed = true;
+      }
+    });
+    columns.forEach((it) => {
+      if (matrix.shouldToggleColumn(it)) {
+        matrix.toggleColumn(it);
+        changed = true;
+      }
+    });
+  } while (changed);
 
-  return Math.max(...[...set.values()].map((m) => m.sum()));
+  return matrix.sum();
 };
 
-module.exports = { Matrix, matrixScore, ColMatrixToggle, RowMatrixToggle };
+module.exports = { Matrix, matrixScore };

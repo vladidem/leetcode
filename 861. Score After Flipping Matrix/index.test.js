@@ -7,87 +7,80 @@ const {
 
 describe('861. Score After Flipping Matrix', () => {
   test('matrix is correctly read', () => {
-    let rows;
-    let convertedRows;
+    let numbers;
     let matrix;
 
-    rows = [
+    numbers = [
       [0, 0, 1, 1],
       [1, 0, 1, 0],
       [1, 1, 0, 0],
     ];
-    convertedRows = [3, 10, 12];
-    matrix = Matrix.fromRows(rows);
-    expect(matrix.numbers).toEqual(expect.arrayContaining(convertedRows));
+    matrix = new Matrix(numbers);
+
+    expect(matrix.columns()).toEqual(expect.arrayContaining([0, 1, 2, 3]));
+    expect(matrix.rows()).toEqual(expect.arrayContaining([0, 1, 2]));
     expect(matrix.numberMask).toEqual(15);
+    expect(matrix.rowToNumber(0)).toEqual(3);
+    expect(matrix.invertedRowToNumber(0)).toEqual(12);
+    expect(matrix.rowToNumber(1)).toEqual(10);
+    expect(matrix.rowToNumber(2)).toEqual(12);
+    expect(matrix.sum()).toEqual(25);
 
-    rows = [
+    numbers = [
       [0, 0, 1, 1, 1],
       [1, 0, 1, 0, 0],
       [1, 1, 0, 0, 1],
     ];
-    convertedRows = [7, 20, 25];
-    matrix = Matrix.fromRows(rows);
-    expect(matrix.numbers).toEqual(expect.arrayContaining(convertedRows));
-    expect(matrix.numberMask).toEqual(31);
-  });
+    matrix = new Matrix(numbers);
 
-  test('matrixes are compared correctly', () => {
-    let rows;
-
-    rows = [
-      [0, 0, 1, 1],
-      [1, 0, 1, 0],
-      [1, 1, 0, 0],
-    ];
-    expect(Matrix.fromRows(rows).equals(Matrix.fromRows(rows))).toBe(true);
-
-    rows = [
-      [0, 0, 1, 1, 1],
-      [1, 0, 1, 0, 0],
-      [1, 1, 0, 0, 1],
-    ];
-    expect(Matrix.fromRows(rows).equals(Matrix.fromRows(rows))).toBe(true);
+    expect(matrix.columns()).toEqual(expect.arrayContaining([0, 1, 2, 3, 4]));
+    expect(matrix.rows()).toEqual(expect.arrayContaining([0, 1, 2]));
+    expect(matrix.rowToNumber(0)).toEqual(7);
+    expect(matrix.rowToNumber(1)).toEqual(20);
+    expect(matrix.rowToNumber(2)).toEqual(25);
+    expect(matrix.sum()).toEqual(52);
   });
 
   test('matrix permutations are working correctly', () => {
-    let rows;
-    let permutatedRows;
-    let permutation;
+    let numbers;
     let matrix;
-    let permutatedMatrix;
 
-    rows = [[0, 0, 1, 1]];
-    permutatedRows = [[1, 0, 1, 1]];
-    permutation = new ColMatrixToggle(0);
+    numbers = [
+      [0, 0, 1, 1, 1],
+      [1, 0, 1, 0, 0],
+      [1, 1, 0, 0, 1],
+    ];
+    matrix = new Matrix(numbers);
+    matrix.toggleColumn(0);
+    expect(matrix.rowToNumber(0)).toEqual(23);
+    expect(matrix.rowToNumber(1)).toEqual(4);
+    expect(matrix.rowToNumber(2)).toEqual(9);
 
-    matrix = permutation.apply(Matrix.fromRows(rows));
-    permutatedMatrix = Matrix.fromRows(permutatedRows);
-    expect(matrix.equals(permutatedMatrix)).toBe(true);
+    numbers = [
+      [0, 0, 1, 1, 1],
+      [1, 0, 1, 0, 0],
+      [1, 1, 0, 0, 1],
+    ];
 
-    rows = [[0, 0, 1, 1]];
-    permutatedRows = [[1, 1, 0, 0]];
-    permutation = new RowMatrixToggle(0);
-
-    matrix = permutation.apply(Matrix.fromRows(rows));
-    permutatedMatrix = Matrix.fromRows(permutatedRows);
-    expect(matrix.equals(permutatedMatrix)).toBe(true);
+    matrix = new Matrix(numbers);
+    matrix.toggleRow(0);
+    expect(matrix.rowToNumber(0)).toEqual(24);
   });
 
   test('matrix score calculated correctly', () => {
-    let rows;
+    let numbers;
     let score;
 
-    rows = [
+    numbers = [
       [0, 0, 1, 1],
       [1, 0, 1, 0],
       [1, 1, 0, 0],
     ];
     score = 39;
 
-    expect(matrixScore(rows)).toEqual(score);
+    expect(matrixScore(numbers)).toEqual(score);
 
-    rows = [
+    numbers = [
       [0, 0],
       [0, 1],
       [1, 1],
@@ -98,9 +91,9 @@ describe('861. Score After Flipping Matrix', () => {
       [0, 0],
     ];
     score = 22;
-    expect(matrixScore(rows)).toEqual(score);
+    expect(matrixScore(numbers)).toEqual(score);
 
-    rows = [
+    numbers = [
       [0, 0, 0],
       [0, 1, 0],
       [0, 1, 0],
@@ -112,6 +105,6 @@ describe('861. Score After Flipping Matrix', () => {
       [0, 0, 1],
     ];
     score = 52;
-    expect(matrixScore(rows)).toEqual(score);
+    expect(matrixScore(numbers)).toEqual(score);
   });
 });
