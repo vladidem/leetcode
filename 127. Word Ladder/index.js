@@ -75,13 +75,8 @@ const findDistances = (adjacencyList, beginWord) => {
     unvisited.push(word);
   }
 
-  while (true) {
-    const current = unvisited.pop();
-
-    if (!current) {
-      break;
-    }
-
+  let current;
+  while (current = unvisited.pop()) {
     const currentDistance = distances[current];
 
     for (const neighbour of adjacencyList[current]) {

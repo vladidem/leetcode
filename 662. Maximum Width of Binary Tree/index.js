@@ -18,10 +18,7 @@ const levelWidth = (level, nodeIndexes) => {
     return 0;
   }
 
-  return nodeIndexes
-    .get(rightNode)
-    .minus(nodeIndexes.get(leftNode))
-    .plus(1);
+  return nodeIndexes.get(rightNode).minus(nodeIndexes.get(leftNode)).plus(1);
 };
 
 /**
@@ -35,20 +32,16 @@ const levelWidth = (level, nodeIndexes) => {
  * @param {TreeNode} root
  * @return {number}
  */
-const widthOfBinaryTree = function(root) {
+const widthOfBinaryTree = function (root) {
   const nodeIndexes = new Map();
   nodeIndexes.set(root, new BigNumber(0));
 
   let nextLevel = [root];
   let level;
+  let width;
   const widths = [];
 
-  while (true) {
-    const width = levelWidth(nextLevel, nodeIndexes);
-    if (width <= 0) {
-      break;
-    }
-
+  while ((width = levelWidth(nextLevel, nodeIndexes)) > 0) {
     widths.push(width);
     level = nextLevel;
     nextLevel = [];
