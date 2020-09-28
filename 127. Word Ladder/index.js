@@ -4,7 +4,7 @@ require('../helpers/defineObjectFromEntries')();
 
 const PriorityQueue = require('../helpers/PriorityQueue');
 
-const isNeighbours = (wordA, wordB, maxDistance = 1) => {
+const areNeighbours = (wordA, wordB, maxDistance = 1) => {
   let distance = 0;
 
   for (let i = 0; i < wordA.length; i++) {
@@ -27,7 +27,7 @@ const addWord = (graphEntries, word) => {
     // tree entry looks like ['word', ['neighbour1', 'neighbour2']]
     const treeWord = graphEntries[i][0];
 
-    if (isNeighbours(treeWord, word)) {
+    if (areNeighbours(treeWord, word)) {
       graphEntries[i][1].push(word);
       wordNeighbours.push(treeWord);
     }
@@ -135,12 +135,12 @@ const ladderLength = function(beginWord, endWord, wordList) {
   const adjacencyList = createGraph(adjustedWords);
   const distances = findDistances(adjacencyList, beginWord);
 
-  const isAccessable =
+  const isAccessible =
     distances[endWord] && distances[endWord] !== Number.MAX_VALUE;
 
-  // if word is inaccessable, return 0
+  // if word is inaccessible, return 0
   // otherwise return distance + 1 (distance doesnt count begin word)
-  return isAccessable ? distances[endWord] + 1 : 0;
+  return isAccessible ? distances[endWord] + 1 : 0;
 };
 
 module.exports = { ladderLength };
