@@ -4,7 +4,7 @@ require('../helpers/defineObjectFromEntries')();
 
 const PriorityQueue = require('../helpers/PriorityQueue');
 
-const isNeighbours = (wordA, wordB, maxDistance = 1) => {
+const areNeighbours = (wordA, wordB, maxDistance = 1) => {
   let distance = 0;
 
   for (let i = 0; i < wordA.length; i++) {
@@ -27,7 +27,7 @@ const addWord = (graphEntries, word) => {
     // tree entry looks like ['word', ['neighbour1', 'neighbour2']]
     const treeWord = graphEntries[i][0];
 
-    if (isNeighbours(treeWord, word)) {
+    if (areNeighbours(treeWord, word)) {
       graphEntries[i][1].push(word);
       wordNeighbours.push(treeWord);
     }
