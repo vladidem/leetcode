@@ -1,7 +1,16 @@
 const { CustomStack } = require('./index');
 
 describe('1381. Design a Stack With Increment Operation', () => {
-  test('Custom stack operations work correctly', () => {
+  test('Custom stack converts to array correctly', () => {
+    let stack = new CustomStack(3);
+
+    stack.push(2);
+    stack.push(3);
+    stack.push(4);
+    expect(stack.toArray()).toEqual([2, 3, 4]);
+  });
+
+  test('Custom stack operations work correctly, leetcode case 1', () => {
     let stack = new CustomStack(3);
     stack.push(1);
     stack.push(2);
