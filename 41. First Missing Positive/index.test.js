@@ -7,5 +7,7 @@ describe('41. First Missing Positive', () => {
     expect(firstMissingPositive([1, 2, 5, 8, -3])).toBe(3);
 
     expect(firstMissingPositive([-1, -2, 5, 8, -3])).toBe(1);
+
+    expect(firstMissingPositive([1, 2, 3, 4, 5])).toBe(6);
   });
 });
