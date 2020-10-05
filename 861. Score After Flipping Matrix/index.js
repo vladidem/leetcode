@@ -47,15 +47,6 @@ class Matrix {
     return 0;
   }
 
-  countRow(row) {
-    let count = 0;
-    for (let i = 0; i < this.numbers[row].length; i++) {
-      count += this.numbers[row][i];
-    }
-
-    return count;
-  }
-
   shouldFlipRow(row) {
     return this.rowToNumber(row) < this.invertedRowToNumber(row);
   }
