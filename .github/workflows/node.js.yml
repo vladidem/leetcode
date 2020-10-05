@@ -22,3 +22,7 @@ jobs:
         run: npm run build --if-present
       - name: Run tests
         run: npm test
+      - name: Report coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: bash <(curl -s https://codecov.io/bash)
