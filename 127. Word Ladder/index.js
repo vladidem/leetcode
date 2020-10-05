@@ -92,34 +92,6 @@ const findDistances = (adjacencyList, beginWord) => {
   return distances;
 };
 
-const backtrackPaths = (adjacencyList, distances, endWord) => {
-  // return empty array, if end word is inaccessable
-  if (!distances[endWord] || distances[endWord] === Number.MAX_VALUE) {
-    return [];
-  }
-
-  let paths = [[endWord]];
-
-  const getNextSteps = (path) => {
-    const currentWord = path.last();
-    return adjacencyList[currentWord].filter(
-      (nextWord) => distances[currentWord] === distances[nextWord] + 1,
-    );
-  };
-
-  // let currentWord = endWord;
-
-  for (let i = 0; i < distances[endWord]; i++) {
-    paths = paths
-      // for each possible next step append path with it
-      .map((path) => getNextSteps(path).map((nextStep) => [...path, nextStep]))
-      // flatten, because instead of array of paths we have array of arrays of continued paths
-      .flat(1);
-  }
-
-  return paths.map((path) => path.reverse());
-};
-
 /**
  * @param {string} beginWord
  * @param {string} endWord
