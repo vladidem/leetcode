@@ -1,7 +1,7 @@
 const { ladderLength } = require('./index');
 
 describe('127. Word Ladder', () => {
-  test('ladder lenght should be found', () => {
+  test('ladder length should be found', () => {
     let beginWord = 'hit';
     let endWord = 'cog';
     let wordList = ['hot', 'dot', 'dog', 'lot', 'log', 'cog'];
@@ -9,7 +9,7 @@ describe('127. Word Ladder', () => {
     expect(ladderLength(beginWord, endWord, wordList)).toBe(5);
   });
 
-  test('ladder lenght should not be found', () => {
+  test('ladder length should not be found', () => {
     let beginWord = 'hit';
     let endWord = 'cog';
     let wordList = ['hot', 'dot', 'dog', 'lot', 'log'];
